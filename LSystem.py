@@ -50,6 +50,16 @@ class SLRule(LRule):
 				return item[0]
 				break
 
+	def addResult(self, result, weight):
+		"""Append a weighted result to existing rule
+
+		Keywords:
+		result -- Outcome to be added
+		weight -- Likelyhood this outcome should be selected
+		"""
+		tup = (result, weight)
+		self.result.append(tup)
+
 
 class LGrammar:
 	def __init__(self, ruleList = [] ):
@@ -60,20 +70,33 @@ class LGrammar:
 		"""
 		self.rules = ruleList
 
-	def getRule(self, rootVal):
-		"""Find and return the LRule relating to an input character (None if no matching rule exists)"""
+	def getRule(self, rootVal, seed=None):
+		"""Find and return the LRule relating to an input character (None if no matching rule exists)
+
+		Keywords:
+		rootVal -- character to be solved for
+		"""
 		for rule in self.rules:
 			if rootVal == rule.root:
 				return rule
 		return None
 
-	def processString(self, string, generations=1):
+	def addRule(self, rule):
+		"""Add any rule object to this grammar"""
+		self.rules.append(rule)
+
+	def delRule(self, ruleAxiom):
+		"""Remove a rule from this grammar"""
+		r = self.getRule(ruleAxiom)
+		self.rules.remove(r)
+
+	def processString(self, string, generations=1, seed=None):
 		""" Take an input and perform all relevant rules in grammar to produce an output.
 
 		Keywords:
 		axiom -- Initializing string of n characters
 		generations -- Number of iterations of this ruleset too perform on axiom (default is one)
-
+		
 		Note:
 		Default behavior for any characters without defined rules is to be constant 
 		"""
@@ -102,4 +125,5 @@ if __name__ == "__main__":
 	srules = []
 	srules.append(SLRule('A', [('B', .5),('C', .5),('D',.5)]))
 	grammar2 = LGrammar(srules)
+	random.seed(6)
 	print(grammar2.processString('AAAAAAXAAAAAA'))
