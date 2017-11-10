@@ -5,9 +5,9 @@ https://en.wikipedia.org/wiki/L-system
 
 import random
 
-class LRule:
+class Rule:
 	def __init__(self, initial, final):
-		"""	Initialize a basic L-System Rule. All ruletypes should be a subset of this rule.
+		"""	Initialize a basic Rule. All ruletypes should be a subset of this rule.
 
 		Keywords:
 		initial -- The character this rule will replace
@@ -21,17 +21,17 @@ class LRule:
 		return self.result
 
 
-class SLRule(LRule):
+class StochiasticR(Rule):
 	def __init__(self, initial, weightedFinals):
-		""" Initialize a stochiastic L-System rule.return
+		""" Initialize a stochiastic rule.
 
 		Keywords:
-		initial -- Character this rule will replace
-		weightedFinals -- List of tuples featuring replacement characters and their respective probabilities
+		initial -- String this rule will replace
+		weightedFinals -- List of tuples featuring replacement Strings and their respective probabilities
 			weightedFinals list should be formatted similar to:
 			[(A, 1),(B,1)...]
 		"""
-		LRule.__init__(self, initial, weightedFinals)
+		Rule.__init__(self, initial, weightedFinals)
 		self.weightScale = 0
 		for item in self.result:
 			self.weightScale += item[1]
@@ -61,7 +61,7 @@ class SLRule(LRule):
 		self.result.append(tup)
 
 
-class LGrammar:
+class Grammar:
 	def __init__(self, ruleList = [] ):
 		"""Initialize a grammar system to process a list of rules
 
@@ -90,6 +90,11 @@ class LGrammar:
 		r = self.getRule(ruleAxiom)
 		self.rules.remove(r)
 
+
+class LSystem(Grammar):
+	def __init__(self, ruleList = []):
+		Grammar.__init__(self, ruleList)
+
 	def processString(self, string, generations=1, seed=None):
 		""" Take an input and perform all relevant rules in grammar to produce an output.
 
@@ -114,16 +119,21 @@ class LGrammar:
 			return reply
 
 
+class Markov(Grammar):
+	def __init__(self, ruleList = []):
+		Grammar.__init__(self, ruleList)
+
+
 '''Confirm both rule types work'''
 if __name__ == "__main__":
 	rulelist = []
-	rulelist.append(LRule('A', 'AB'))
-	rulelist.append(LRule('B', 'A'))
-	grammar1 = LGrammar(rulelist)
+	rulelist.append(Rule('A', 'AB'))
+	rulelist.append(Rule('B', 'A'))
+	grammar1 = LSystem(rulelist)
 	print(grammar1.processString('A', 7))
 
 	srules = []
-	srules.append(SLRule('A', [('B', .5),('C', .5),('D',.5)]))
-	grammar2 = LGrammar(srules)
+	srules.append(StochiasticR('A', [('B', .5),('C', .5),('D',.5)]))
+	grammar2 = LSystem(srules)
 	random.seed(6)
 	print(grammar2.processString('AAAAAAXAAAAAA'))
