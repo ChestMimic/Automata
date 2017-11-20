@@ -5,6 +5,8 @@ https://en.wikipedia.org/wiki/L-system
 
 import random
 
+from Grammar import LSystem
+
 class Rule:
 	def __init__(self, initial, final):
 		"""	Initialize a basic Rule. All ruletypes should be a subset of this rule.
