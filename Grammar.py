@@ -60,17 +60,17 @@ class Markov(Grammar):
 	def __init__(self, ruleList = []):
 		Grammar.__init__(self, ruleList)
 
-		def performOnAxiom(self, axiom, generations=1):
-			reply = ""
-			generations -= 1
-			relevantRule = self.getRule(axiom)
-			nxt = relevantRule.pickResult()
-			if relevantRule is None:
-				#Non turing complete decision, handle silently
-				return reply
-			else:
-				reply += nxt
-			if generations > 0:
-				return (reply + self.performOnAxiom(nxt, generations))
-			else:
-				return reply
+	def performOnAxiom(self, axiom, generations=1):
+		reply = ""
+		generations -= 1
+		relevantRule = self.getRule(axiom)
+		nxt = relevantRule.pickResult()
+		if relevantRule is None:
+			#Non turing complete decision, handle silently
+			return reply
+		else:
+			reply += nxt
+		if generations > 0:
+			return (reply + self.performOnAxiom(nxt, generations))
+		else:
+			return reply

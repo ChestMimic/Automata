@@ -5,7 +5,7 @@ https://en.wikipedia.org/wiki/L-system
 
 import random
 
-from Grammar import LSystem
+from Grammar import LSystem, Markov
 
 class Rule:
 	def __init__(self, initial, final):
@@ -77,5 +77,11 @@ if __name__ == "__main__":
 	srules = []
 	srules.append(StochiasticR('A', [('B', .5),('C', .5),('D',.5)]))
 	grammar2 = LSystem(srules)
-	random.seed(6)
+	#random.seed(6)
 	print(grammar2.processString('AAAAAAXAAAAAA'))
+
+	markovRules  =[]
+	markovRules.append(StochiasticR('A', [('A',.5),('B',.5)]))
+	markovRules.append(StochiasticR('B', [('A',.5),('B',.5)]))
+	markovGrammar = Markov(markovRules)
+	print(markovGrammar.performOnAxiom('A', 6))
